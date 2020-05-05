@@ -16,7 +16,7 @@ export class SettingStorage {
   swapPiP: PiPMode = PiPMode.REACTION;
   pipVideoSize = 0.35;
   pipPosition: PiPPosition = PiPPosition.BOTTOMLEFT;
-  host = "https://localhost:8080";
+  host = "https://reasync.netlify.app";
 
   constructor() {
     const storage = localStorage.getItem("settings");
