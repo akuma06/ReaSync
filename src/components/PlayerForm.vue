@@ -10,10 +10,30 @@
             <div class="card-content">
               <div class="content">
                 <div class="field">
+                  <label for="isreactionlocal" class="checkbox">
+                    Is your reaction video a local file?
+                    <input
+                      type="checkbox"
+                      name="isreactionlocal"
+                      id="isreactionlocal"
+                      v-model="isReactionLocal"
+                    />
+                  </label>
+                </div>
+                <div class="field">
                   <label for="reaction" class="label">
                     Reaction Video:
                   </label>
                   <div class="control">
+                    <input
+                      type="file"
+                      name="reaction"
+                      id="reaction"
+                      class="input"
+                      @change="handleReactionFileChange"
+                      placeholder="Reaction Video File"
+                      v-if="isReactionLocal"
+                    />
                     <input
                       type="text"
                       name="reaction"
@@ -24,6 +44,7 @@
                       }"
                       v-model="localReaction"
                       placeholder="Reaction Video URL (YouTube, Vimeo, Direct)"
+                      v-else
                     />
                   </div>
                   <p
@@ -150,6 +171,8 @@ export default class PlayerForm extends Vue {
   localReaction = this.reaction.link;
   localSource = this.source.link;
   isLocal = false;
+  isReactionLocal = false;
+  localReactionFile: File | null = null;
   localFile: File | null = null;
   hours = this.sync.hours.toString();
   minutes = this.sync.minutes.toString();
@@ -161,6 +184,13 @@ export default class PlayerForm extends Vue {
     if (files !== null && files.length > 0) {
       console.log(files[0]);
       this.localFile = files[0];
+    }
+  }
+  handleReactionFileChange(e: Event) {
+    const { files } = e.target as HTMLInputElement;
+    if (files !== null && files.length > 0) {
+      console.log(files[0]);
+      this.localReactionFile = files[0];
     }
   }
 
@@ -175,7 +205,9 @@ export default class PlayerForm extends Vue {
         this.hours + ":" + this.minutes + ":" + this.seconds
       );
       this.$emit("submit", {
-        reaction: new Video(this.localReaction),
+        reaction: this.isReactionLocal && this.localReactionFile !== null
+            ? new Video(this.localReactionFile)
+            : new Video(this.localReaction),
         source:
           this.isLocal && this.localFile !== null
             ? new Video(this.localFile)

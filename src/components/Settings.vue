@@ -190,9 +190,12 @@ export default class Settings extends Vue {
   }
 
   get shareUrl() {
-    return `${this.settings.host}/?reaction=${encodeURIComponent(
-      this.reaction.link
-    )}&source=${
+    return `${this.settings.host}/?reaction=${
+      this.reaction.type !== VideoPlatform.LOCAL &&
+      this.reaction.type !== undefined
+        ? encodeURIComponent(this.reaction.link)
+        : ""
+    }&source=${
       this.source.type !== VideoPlatform.LOCAL && this.source.type !== undefined
         ? encodeURIComponent(this.source.link)
         : ""
