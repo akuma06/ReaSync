@@ -19,18 +19,18 @@
           host +
           '&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&amp;autoplay=0'
       "
-      id="widget4"
     ></iframe>
     <iframe
-      :src="
-        'https://player.vimeo.com/video/' +
+      :src="'https://player.vimeo.com/video/' +
           videoId +
-          '?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media'
+          '?loop=false&amp;autoplay=false&amp;muted=false&amp;gesture=media&amp;playsinline=true&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=false'
       "
-      allowfullscreen
-      allowtransparency
-      allow="autoplay"
-      v-else-if="video.type === 2"
+      allowfullscreen="1"
+      allow="autoplay,fullscreen,picture-in-picture"
+      referrerpolicy="no-referrer"
+      title="Vimeo Video Player"
+      data-ready="true"
+      tabindex="-1"
     ></iframe>
   </div>
   <video
