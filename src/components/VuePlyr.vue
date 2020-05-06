@@ -49,14 +49,14 @@ import Plyr from "plyr";
 import { PlayerInterface, VideoState, Video } from "./VideoStruct";
 import { SettingStorage } from "./Settings";
 
-type K = keyof Plyr.PlyrEventMap;
-
 @Component
 export default class VuePlyr extends Vue implements PlayerInterface {
   /** Options object for plyr config. **/
   @Prop() options: Plyr.Options | undefined;
   /** Array of events to emit from the plyr object **/
-  @Prop() emit: Array<keyof Plyr.PlyrEventMap> | undefined;
+  @Prop() emit:
+    | Array<Plyr.StandardEvent | Plyr.Html5Event | Plyr.YoutubeEvent>
+    | undefined;
   @Prop({ default: true, required: false }) hideYouTubeDOMError!: boolean;
   @Prop({ default: new Video("") }) private video!: Video;
 
@@ -75,7 +75,7 @@ export default class VuePlyr extends Vue implements PlayerInterface {
         console.log();
         this.player = new Plyr(player, this._options);
         if (this.emit !== undefined)
-          this.emit.forEach((element: keyof Plyr.PlyrEventMap) => {
+          this.emit.forEach(element => {
             if (this.player !== null)
               this.player.on(element, this.emitPlayerEvent);
           });
@@ -95,7 +95,8 @@ export default class VuePlyr extends Vue implements PlayerInterface {
           if (this.player !== null)
             this.$emit("durationchange", this.player.currentTime);
         });
-        this.player.on("statechange", e => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.player.on("statechange", (e: any) => {
           if (
             e.detail.code !== null &&
             e.detail.code !== -1 &&
