@@ -91,6 +91,7 @@
                         class="input"
                         v-model="hours"
                         placeholder="hh"
+                        aria-label="Hours"
                       />
                     </div>
                     <p class="control">
@@ -104,6 +105,7 @@
                         class="input"
                         v-model="minutes"
                         placeholder="mm"
+                        aria-label="Minutes"
                       />
                     </div>
                     <p class="control">
@@ -117,6 +119,7 @@
                         class="input"
                         v-model="seconds"
                         placeholder="ss"
+                        aria-label="Seconds"
                       />
                     </div>
                   </div>
