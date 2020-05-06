@@ -135,6 +135,19 @@ export default class Player extends Vue {
 
   showSettings = false;
 
+  mounted() {
+    window.addEventListener("resize", this.handleResize);
+  }
+
+  beforeDestroy() {
+    window.removeEventListener("resize", this.handleResize);
+  }
+
+  handleResize() {
+    this.totalWidth = document.body.offsetWidth;
+    this.totalHeight = document.body.offsetHeight;
+  }
+
   handleStateChange(video: "reaction" | "source", state: VideoState) {
     const otherKeyState = video === "reaction" ? "source" : "reaction";
     this.videoState[video] = state;
