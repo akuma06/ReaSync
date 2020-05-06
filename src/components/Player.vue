@@ -33,6 +33,18 @@
             : ''
       }"
     >
+      <funimation
+        ref="reactionplayer"
+        @durationchange="handleDurationChange"
+        @statechange="
+          state => {
+            handleStateChange('reaction', state);
+          }
+        "
+        :video="reaction"
+        v-if="reaction.type === 3"
+      >
+      </funimation>
       <vue-plyr
         ref="reactionplayer"
         @durationchange="handleDurationChange"
@@ -42,6 +54,7 @@
           }
         "
         :video="reaction"
+        v-else
       >
       </vue-plyr>
     </div>
@@ -66,7 +79,20 @@
             : ''
       }"
     >
+      <funimation
+        v-if="source.type === 3"
+        ref="sourceplayer"
+        @durationchange="handleDurationChange"
+        @statechange="
+          state => {
+            handleStateChange('source', state);
+          }
+        "
+        :video="source"
+      >
+      </funimation>
       <vue-plyr
+        v-else
         ref="sourceplayer"
         @statechange="
           state => {
@@ -108,11 +134,12 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import { Video, VideoState, PlayerInterface } from "@/components/VideoStruct";
 import Settings from "@/components/Settings.vue";
 import VuePlyr from "@/components/VuePlyr.vue";
+import Funimation from "@/components/platforms/Funimation.vue";
 import { TimeStruct } from "./time_utils";
 import { SettingStorage, PiPMode, PiPPosition } from "./Settings";
 
 @Component({
-  components: { Settings, VuePlyr }
+  components: { Settings, VuePlyr, Funimation }
 })
 export default class Player extends Vue {
   @Prop({ default: new Video("") }) private reaction!: Video;

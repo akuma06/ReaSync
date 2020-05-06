@@ -205,7 +205,8 @@ export default class PlayerForm extends Vue {
         this.hours + ":" + this.minutes + ":" + this.seconds
       );
       this.$emit("submit", {
-        reaction: this.isReactionLocal && this.localReactionFile !== null
+        reaction:
+          this.isReactionLocal && this.localReactionFile !== null
             ? new Video(this.localReactionFile)
             : new Video(this.localReaction),
         source:

@@ -21,7 +21,8 @@
       "
     ></iframe>
     <iframe
-      :src="'https://player.vimeo.com/video/' +
+      :src="
+        'https://player.vimeo.com/video/' +
           videoId +
           '?loop=false&amp;autoplay=false&amp;muted=false&amp;gesture=media&amp;playsinline=true&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=false'
       "

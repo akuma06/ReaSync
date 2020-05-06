@@ -3,7 +3,8 @@ import { TimeStruct } from "./time_utils";
 export enum VideoPlatform {
   LOCAL,
   YOUTUBE,
-  VIMEO
+  VIMEO,
+  FUNIMATION
 }
 
 export class Video {
@@ -57,12 +58,26 @@ export class Video {
     return "";
   }
 
+  private funimationId(): string {
+    if (this.link !== "") {
+      const match = this.link.match(
+        /http[s]*:\/\/www\.funimation\.com\/player\/([0-9]+).+/i
+      );
+      if (match !== null && match.length > 1) {
+        return match[1];
+      }
+    }
+    return "";
+  }
+
   async getVideoId(): Promise<string> {
     switch (this.type) {
       case VideoPlatform.YOUTUBE:
         return this.youtubeId();
       case VideoPlatform.VIMEO:
         return await this.vimeoId();
+      case VideoPlatform.FUNIMATION:
+        return this.funimationId();
       default:
         return "";
     }
@@ -75,6 +90,8 @@ export class Video {
       return VideoPlatform.YOUTUBE;
     } else if (this.source.match(/vimeo/i) !== null) {
       return VideoPlatform.VIMEO;
+    } else if (this.source.match(/funimation/i) !== null) {
+      return VideoPlatform.FUNIMATION;
     }
   }
 }
