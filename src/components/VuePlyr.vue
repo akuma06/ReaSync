@@ -104,6 +104,9 @@ export default class VuePlyr extends Vue implements PlayerInterface {
           )
             this.$emit("statechange", e.detail.code);
         });
+        if (!player.classList.contains("plyrplayer")) {
+          player.classList.add("plyrplayer");
+        }
       }
     });
   }
