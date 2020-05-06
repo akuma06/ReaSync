@@ -15,10 +15,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   inkscape:export-filename="G:\Documents\OneDrive\Images\bitmap.png"
-   inkscape:export-xdpi="121.26315"
-   inkscape:export-ydpi="121.26315"
-   sodipodi:docname="logo.svg">
+   inkscape:export-filename="G:\Documents\Dev\reasync\src\assets\img\icons\android-chrome-maskable-192x192.png"
+   inkscape:export-xdpi="104.73"
+   inkscape:export-ydpi="104.73"
+   sodipodi:docname="safari-pinned-tab.svg">
   <defs
      id="defs4">
     <linearGradient
@@ -543,7 +543,7 @@
      inkscape:cx="127.4316"
      inkscape:cy="638.92094"
      inkscape:document-units="px"
-     inkscape:current-layer="layer10"
+     inkscape:current-layer="layer11"
      showgrid="false"
      inkscape:window-width="2560"
      inkscape:window-height="1377"
@@ -565,15 +565,15 @@
   </metadata>
   <g
      inkscape:groupmode="layer"
-     id="layer10"
+     id="layer11"
      inkscape:label="Layer#4">
     <rect
-       style="fill:url(#linearGradient4328);fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="rect4302"
-       width="440"
-       height="440"
-       x="106.21428"
-       y="229.64789"
+       style="opacity:0.38053098;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect4359"
+       width="416.42856"
+       height="416.42856"
+       x="136.42857"
+       y="245.93361"
        rx="19.995979"
        ry="22.630983" />
   </g>
@@ -606,7 +606,7 @@
      inkscape:label="Layer#2">
     <path
        sodipodi:type="star"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;opacity:0.38053097"
        id="path4245"
        sodipodi:sides="3"
        sodipodi:cx="273.57144"
@@ -634,7 +634,7 @@
      style="display:inline">
     <text
        xml:space="preserve"
-       style="font-size:257.42892456px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient5332);fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Candara;-inkscape-font-specification:Candara"
+       style="font-size:257.42892455999998000px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Candara;-inkscape-font-specification:Candara"
        x="198.01659"
        y="528.32831"
        id="text3757-5"
@@ -644,10 +644,10 @@
          id="tspan3759-5"
          x="198.01659"
          y="528.32831"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:url(#linearGradient5332);fill-opacity:1;fill-rule:nonzero;font-family:Candara;-inkscape-font-specification:Candara">RS</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;fill-rule:nonzero;font-family:Candara;-inkscape-font-specification:Candara">RS</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:257.42892455999998000px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.29203540000000000;fill:url(#linearGradient4157);fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline;font-family:Candara;-inkscape-font-specification:Candara;filter:url(#filter4238)"
+       style="font-size:257.42892455999998000px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.29203540000000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline;font-family:Candara;-inkscape-font-specification:Candara;filter:url(#filter4238)"
        x="194.34042"
        y="530.53882"
        id="text3757-5-8"
@@ -657,6 +657,6 @@
          id="tspan3759-5-3"
          x="194.34042"
          y="530.53882"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:url(#linearGradient4157);fill-opacity:1;fill-rule:nonzero;font-family:Candara;-inkscape-font-specification:Candara">RS</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;fill-rule:nonzero;font-family:Candara;-inkscape-font-specification:Candara">RS</tspan></text>
   </g>
 </svg>
