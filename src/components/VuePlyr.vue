@@ -30,7 +30,8 @@
       referrerpolicy="no-referrer"
       title="Vimeo Video Player"
       data-ready="true"
-      tabindex="-1"
+      width="100%"
+      height="100%"
     ></iframe>
   </div>
   <video
