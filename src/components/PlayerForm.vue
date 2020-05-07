@@ -3,7 +3,7 @@
     <section class="hero is-dark is-bold is-fullheight">
       <div class="hero-head">
         <figure class="image is-128x128">
-          <img src="/img/icons/android-chrome-maskable-512x512.png" />
+          <img src="/img/icons/logo-transparent.png" />
         </figure>
         <h1 class="title has-text-centered is-size-1">ReaSync</h1>
       </div>
