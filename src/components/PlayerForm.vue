@@ -39,19 +39,14 @@
                       name="reaction"
                       id="reaction"
                       class="input"
-                      :class="{
-                        'is-danger': sumbittedOnce && !isReactionValid
-                      }"
+                      :class="{ 'is-danger': errors.reaction !== '' }"
                       v-model="localReaction"
-                      placeholder="Reaction Video URL (YouTube, Vimeo, Direct)"
+                      placeholder="Reaction Video URL (YouTube, Vimeo, Funimation, Direct)"
                       v-else
                     />
                   </div>
-                  <p
-                    class="help is-danger"
-                    v-if="sumbittedOnce && !isReactionValid"
-                  >
-                    No valid reaction video provided!
+                  <p class="help is-danger" v-if="errors.reaction !== ''">
+                    {{ errors.reaction }}
                   </p>
                 </div>
                 <div class="field">
@@ -85,18 +80,15 @@
                       id="source"
                       class="input"
                       :class="{
-                        'is-danger': sumbittedOnce && !isSourceValid
+                        'is-danger': errors.source !== ''
                       }"
-                      placeholder="Source Video URL (YouTube, Vimeo, Direct)"
+                      placeholder="Source Video URL (YouTube, Vimeo, Funimation, Direct)"
                       v-model="localSource"
                       v-else
                     />
                   </div>
-                  <p
-                    class="help is-danger"
-                    v-if="sumbittedOnce && !isSourceValid"
-                  >
-                    No valid source video provided!
+                  <p class="help is-danger" v-if="errors.source !== ''">
+                    {{ errors.source }}
                   </p>
                 </div>
                 <div class="field">
@@ -162,6 +154,11 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import { VideoStruct, Video } from "@/components/VideoStruct";
 import { TimeStruct } from "./time_utils";
 
+interface ErrorMessages {
+  reaction: string;
+  source: string;
+}
+
 @Component
 export default class PlayerForm extends Vue {
   @Prop({ default: new Video("") }) private reaction!: Video;
@@ -178,6 +175,10 @@ export default class PlayerForm extends Vue {
   minutes = this.sync.minutes.toString();
   seconds = this.sync.seconds.toString();
   sumbittedOnce = false;
+  errors: ErrorMessages = {
+    reaction: "",
+    source: ""
+  };
 
   handleFileChange(e: Event) {
     const { files } = e.target as HTMLInputElement;
@@ -196,49 +197,29 @@ export default class PlayerForm extends Vue {
 
   submit() {
     this.sumbittedOnce = true;
-    if (
-      this.isReactionValid &&
-      (this.isSourceValid || this.localFile !== null)
-    ) {
-      const time = new TimeStruct();
-      time.fromNumberString(
-        this.hours + ":" + this.minutes + ":" + this.seconds
-      );
-      this.$emit("submit", {
-        reaction:
-          this.isReactionLocal && this.localReactionFile !== null
-            ? new Video(this.localReactionFile)
-            : new Video(this.localReaction),
-        source:
-          this.isLocal && this.localFile !== null
-            ? new Video(this.localFile)
-            : new Video(this.localSource),
-        syncTime: time
-      } as VideoStruct);
-    }
-  }
-
-  get isReactionValid() {
-    if (this.localReaction !== "") {
-      try {
-        new URL(this.localReaction);
-        return true;
-      } catch (error) {
-        return false;
+    const reaction =
+      this.isReactionLocal && this.localReactionFile !== null
+        ? new Video(this.localReactionFile)
+        : new Video(this.localReaction);
+    const source =
+      this.isLocal && this.localFile !== null
+        ? new Video(this.localFile)
+        : new Video(this.localSource);
+    const syncTime = new TimeStruct();
+    syncTime.fromNumberString(
+      this.hours + ":" + this.minutes + ":" + this.seconds
+    );
+    Promise.all([reaction.isValid(), source.isValid()]).then(result => {
+      this.errors.reaction = result[0];
+      this.errors.source = result[1];
+      if (this.errors.reaction === "" && this.errors.source === "") {
+        this.$emit("submit", {
+          reaction,
+          source,
+          syncTime
+        } as VideoStruct);
       }
-    }
-    return false;
-  }
-  get isSourceValid() {
-    if (this.localSource !== "") {
-      try {
-        new URL(this.localSource);
-        return true;
-      } catch (error) {
-        return false;
-      }
-    }
-    return false;
+    });
   }
 }
 </script>

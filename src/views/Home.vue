@@ -3,6 +3,7 @@
     :reaction="reaction"
     :source="source"
     :sync="syncTime"
+    @needchange="handleChange"
     v-if="showPlayer"
   />
   <PlayerForm
@@ -31,6 +32,9 @@ export default class Home extends Vue {
   reaction: Video = new Video("");
   source = new Video("");
   syncTime = new TimeStruct(); // seconds
+  needToChange = false;
+  showPlayer = false;
+
   beforeMount() {
     this.reaction = new Video(
       this.$route.query.reaction !== undefined
@@ -57,20 +61,34 @@ export default class Home extends Vue {
         this.syncTime.fromString(this.$route.query.t || "");
       }
     }
+    this.shouldShowPlayer();
   }
-  needToChange = false;
 
   handleFormSubmit(data: VideoStruct) {
     this.reaction = data.reaction;
     this.source = data.source;
     this.syncTime = data.syncTime;
     this.needToChange = false;
+    this.shouldShowPlayer();
   }
 
-  get showPlayer() {
-    return (
-      this.reaction.link !== "" && this.source.link !== "" && !this.needToChange
-    );
+  shouldShowPlayer() {
+    if (
+      this.reaction.link !== "" &&
+      this.source.link !== "" &&
+      !this.needToChange
+    ) {
+      Promise.all([this.reaction.isValid(), this.source.isValid()]).then(
+        result => {
+          this.showPlayer = result[0] === "" && result[1] === "";
+        }
+      );
+    }
+  }
+
+  handleChange() {
+    this.showPlayer = false;
+    this.needToChange = true;
   }
 }
 </script>

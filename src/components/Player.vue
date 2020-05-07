@@ -11,6 +11,14 @@
         ><span class="icon is-large"><font-awesome-icon icon="cog"/></span
         ><span>Paramètres</span></a
       >
+      <a
+        @click.prevent="handleHelp"
+        class="button is-rounded is-outlined is-primary"
+      >
+        <span class="icon is-large">
+          <font-awesome-icon icon="question-circle" />
+        </span>
+      </a>
     </div>
     <div
       class="reaction"
@@ -126,6 +134,13 @@
       @pipsizechange="handlePipSizeChange"
       @syncchange="handleSyncChange"
     />
+    <help-vue
+      :reaction="reaction"
+      :source="source"
+      @close="handleCloseHelp"
+      @needchange="handleNeedChange"
+      v-show="showHelp"
+    />
   </div>
 </template>
 
@@ -134,12 +149,13 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import { Video, VideoState, PlayerInterface } from "@/components/VideoStruct";
 import Settings from "@/components/Settings.vue";
 import VuePlyr from "@/components/VuePlyr.vue";
+import HelpVue from "@/components/Help.vue";
 import Funimation from "@/components/platforms/Funimation.vue";
 import { TimeStruct } from "./time_utils";
 import { SettingStorage, PiPMode, PiPPosition } from "./Settings";
 
 @Component({
-  components: { Settings, VuePlyr, Funimation }
+  components: { Settings, VuePlyr, Funimation, HelpVue }
 })
 export default class Player extends Vue {
   @Prop({ default: new Video("") }) private reaction!: Video;
@@ -161,6 +177,7 @@ export default class Player extends Vue {
   pipPosition = this.settings.pipPosition;
 
   showSettings = false;
+  showHelp = false;
 
   mounted() {
     window.addEventListener("resize", this.handleResize);
@@ -246,6 +263,10 @@ export default class Player extends Vue {
     this.showSettings = false;
   }
 
+  handleCloseHelp() {
+    this.showHelp = false;
+  }
+
   handlePipSizeChange(size: number) {
     console.log(size);
     this.pipSize = size;
@@ -265,6 +286,14 @@ export default class Player extends Vue {
 
   handleSettings() {
     this.showSettings = true;
+  }
+
+  handleHelp() {
+    this.showHelp = true;
+  }
+
+  handleNeedChange() {
+    this.$emit("needchange");
   }
 
   get sourceHeight() {
@@ -323,9 +352,10 @@ export default class Player extends Vue {
     width: auto;
     right: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     a {
       display: block;
+      margin-right: 0.5rem;
     }
   }
   .mainvideo {

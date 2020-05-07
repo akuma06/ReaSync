@@ -3,7 +3,12 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Settings</p>
+        <p class="modal-card-title">
+          <span class="icon">
+            <font-awesome-icon icon="cog" />
+          </span>
+          Settings
+        </p>
         <button
           class="delete"
           aria-label="close"

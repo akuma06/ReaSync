@@ -1,4 +1,5 @@
 import { TimeStruct } from "./time_utils";
+import { SettingStorage } from "./Settings";
 
 export enum VideoPlatform {
   LOCAL,
@@ -9,6 +10,7 @@ export enum VideoPlatform {
 
 export class Video {
   private source: File | string;
+  private videoId = "";
 
   constructor(source: File | string) {
     this.source = source;
@@ -23,6 +25,7 @@ export class Video {
   }
 
   private youtubeId(): string {
+    if (this.videoId !== "") return this.videoId;
     if (this.link !== "") {
       let videoId = "";
       const match = this.link.match(
@@ -38,18 +41,21 @@ export class Video {
           videoId = match[1];
         }
       }
+      this.videoId = videoId;
       return videoId;
     }
     return "";
   }
 
   async vimeoId(): Promise<string> {
+    if (this.videoId !== "") return this.videoId;
     try {
       const result = await fetch(
         "https://vimeo.com/api/oembed.json?url=" + encodeURIComponent(this.link)
       );
       if (result.status === 200) {
         const json = await result.json();
+        this.videoId = json["video_id"] || "";
         return json["video_id"];
       }
     } catch (e) {
@@ -83,6 +89,16 @@ export class Video {
     }
   }
 
+  async isValid() {
+    if (this.type !== VideoPlatform.LOCAL) {
+      const videoId = await this.getVideoId();
+      if (videoId === "") {
+        return "URL provided isn't supported or the owner doesn't allow embedding";
+      }
+    }
+    return "";
+  }
+
   get type() {
     if (this.source instanceof File) {
       return VideoPlatform.LOCAL;
@@ -93,6 +109,7 @@ export class Video {
     } else if (this.source.match(/funimation/i) !== null) {
       return VideoPlatform.FUNIMATION;
     }
+    return VideoPlatform.LOCAL;
   }
 }
 
@@ -114,4 +131,24 @@ export enum VideoState {
   PLAYING,
   PAUSED,
   BUFFERING
+}
+
+export function generateEmbedLink(
+  videoType: VideoPlatform,
+  videoLink: string,
+  videoId: string
+) {
+  if (videoType === VideoPlatform.LOCAL) {
+    return videoLink;
+  }
+  const settings = new SettingStorage();
+  const host = encodeURIComponent(settings.host);
+  switch (videoType) {
+    case VideoPlatform.YOUTUBE:
+      return `https://www.youtube.com/embed/${videoId}?origin=${host}&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1&autoplay=0`;
+    case VideoPlatform.VIMEO:
+      return `https://player.vimeo.com/video/${videoId}?loop=false&autoplay=false&muted=false&gesture=media&playsinline=true&byline=false&portrait=false&title=false&speed=true&transparent=false`;
+    case VideoPlatform.FUNIMATION:
+      return videoLink;
+  }
 }
