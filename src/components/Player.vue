@@ -10,7 +10,7 @@
         @click.prevent="handleSettings"
         class="button is-rounded is-outlined is-primary"
         ><span class="icon is-large"><font-awesome-icon icon="cog"/></span
-        ><span>Paramètres</span></a
+        ><span>Settings</span></a
       >
       <a
         @click.prevent="handleHelp"
