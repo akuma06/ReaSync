@@ -59,16 +59,20 @@ export default class VuePlyr extends Vue implements PlayerInterface {
     | undefined;
   @Prop({ default: true, required: false }) hideYouTubeDOMError!: boolean;
   @Prop({ default: new Video("") }) private video!: Video;
+  @Prop({ default: "" }) private videoId!: string;
 
   settings = new SettingStorage();
   player: Plyr | null = null;
-  _options: Plyr.Options = Object.assign({ autopause: false, debug: true }, this.options);
-  videoId = "";
+  _options: Plyr.Options = Object.assign(
+    { autopause: false, debug: true },
+    this.options
+  );
+  localVideoId = this.videoId;
 
   mounted() {
     this.$emit("statechange", VideoState.BUFFERING);
     this.video.getVideoId().then(id => {
-      this.videoId = id;
+      if (this.localVideoId !== id) this.localVideoId = id;
       this.$emit("statechange", VideoState.PAUSED);
       const player = this.$refs["plyrplayer"] as HTMLElement;
       if (player !== undefined) {
@@ -145,7 +149,11 @@ export default class VuePlyr extends Vue implements PlayerInterface {
     return encodeURIComponent(this.settings.host);
   }
   get iframeLink(): string {
-    return generateEmbedLink(this.video.type, this.video.link, this.videoId);
+    return generateEmbedLink(
+      this.video.type,
+      this.video.link,
+      this.localVideoId
+    );
   }
 }
 </script>

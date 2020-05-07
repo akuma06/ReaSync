@@ -3,6 +3,7 @@
     class="videos"
     @keypress.space="handleSpace"
     @keyup.enter="enterFullscreen"
+    v-if="!loading"
   >
     <div class="controls">
       <a
@@ -61,6 +62,7 @@
             handleStateChange('reaction', state);
           }
         "
+        :videoId="videoId.reaction"
         :video="reaction"
         v-else
       >
@@ -107,6 +109,7 @@
             handleStateChange('source', state);
           }
         "
+        :videoId="videoId.source"
         :video="source"
       >
       </vue-plyr>
@@ -142,6 +145,9 @@
       v-show="showHelp"
     />
   </div>
+  <div class="loading" v-else>
+    <font-awesome-icon icon="spinner" size="6x" color="#8034eb" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -176,11 +182,23 @@ export default class Player extends Vue {
   swapPip = this.settings.swapPiP;
   pipPosition = this.settings.pipPosition;
 
+  videoId: {
+    reaction: string;
+    source: string;
+  } = { reaction: "", source: ""};
   showSettings = false;
   showHelp = false;
+  loading = true;
 
   mounted() {
     window.addEventListener("resize", this.handleResize);
+    Promise.all([this.reaction.getVideoId(), this.source.getVideoId()]).then(
+      result => {
+        this.loading = false;
+        this.videoId.reaction = result[0];
+        this.videoId.source = result[1];
+      }
+    );
   }
 
   beforeDestroy() {
@@ -411,6 +429,25 @@ export default class Player extends Vue {
         text-align: center;
       }
     }
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading {
+  background: black;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    animation: spin 1.2s linear infinite;
   }
 }
 </style>

@@ -4,10 +4,14 @@ import "./registerServiceWorker";
 import router from "./router";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCog, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCog,
+  faQuestionCircle,
+  faSpinner
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faCog, faQuestionCircle);
+library.add(faCog, faQuestionCircle, faSpinner);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 Vue.config.productionTip = false;
