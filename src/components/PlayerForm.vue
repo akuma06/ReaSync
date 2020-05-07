@@ -2,6 +2,9 @@
   <div class="body">
     <section class="hero is-dark is-bold is-fullheight">
       <div class="hero-head">
+        <figure class="image is-128x128">
+          <img src="/img/icons/android-chrome-maskable-512x512.png" />
+        </figure>
         <h1 class="title has-text-centered is-size-1">ReaSync</h1>
       </div>
       <div class="hero-body">
@@ -225,12 +228,21 @@ export default class PlayerForm extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.title {
-  margin-top: 2em;
-}
-
 .body {
   overflow: auto;
   height: 100%;
+}
+
+.hero-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  figure {
+    max-width: 256px;
+    width: 90%;
+    img {
+      width: 100%;
+    }
+  }
 }
 </style>
