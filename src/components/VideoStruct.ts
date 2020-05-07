@@ -5,7 +5,8 @@ export enum VideoPlatform {
   LOCAL,
   YOUTUBE,
   VIMEO,
-  FUNIMATION
+  FUNIMATION,
+  IFRAME
 }
 
 export class Video {
@@ -90,7 +91,10 @@ export class Video {
   }
 
   async isValid() {
-    if (this.type !== VideoPlatform.LOCAL) {
+    if (
+      this.type !== VideoPlatform.LOCAL &&
+      this.type !== VideoPlatform.IFRAME
+    ) {
       const videoId = await this.getVideoId();
       if (videoId === "") {
         return "URL provided isn't supported or the owner doesn't allow embedding";
@@ -106,10 +110,12 @@ export class Video {
       return VideoPlatform.YOUTUBE;
     } else if (this.source.match(/vimeo/i) !== null) {
       return VideoPlatform.VIMEO;
-    } else if (this.source.match(/funimation/i) !== null) {
+    } else if (this.source.match(/funimation\.com/i) !== null) {
       return VideoPlatform.FUNIMATION;
+    } else if (this.source.match(/[mp4|ogg|wav|webm]$/i) !== null) {
+      return VideoPlatform.LOCAL;
     }
-    return VideoPlatform.LOCAL;
+    return VideoPlatform.IFRAME;
   }
 }
 
@@ -150,6 +156,8 @@ export function generateEmbedLink(
     case VideoPlatform.VIMEO:
       return `https://player.vimeo.com/video/${videoId}?loop=false&autoplay=false&muted=false&gesture=media&playsinline=true&byline=false&portrait=false&title=false&speed=true&transparent=false&autopause=false`;
     case VideoPlatform.FUNIMATION:
+      return videoLink;
+    case VideoPlatform.IFRAME:
       return videoLink;
   }
 }

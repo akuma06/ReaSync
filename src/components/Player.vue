@@ -54,6 +54,18 @@
         v-if="reaction.type === 3"
       >
       </funimation>
+      <iframe-vue
+        ref="reactionplayer"
+        @durationchange="handleDurationChange"
+        @statechange="
+          state => {
+            handleStateChange('reaction', state);
+          }
+        "
+        :video="reaction"
+        v-else-if="reaction.type === 4"
+      >
+      </iframe-vue>
       <vue-plyr
         ref="reactionplayer"
         @durationchange="handleDurationChange"
@@ -102,6 +114,18 @@
         :video="source"
       >
       </funimation>
+      <iframe-vue
+        ref="sourcelayer"
+        @durationchange="handleDurationChange"
+        @statechange="
+          state => {
+            handleStateChange('source', state);
+          }
+        "
+        :video="source"
+        v-else-if="source.type === 4"
+      >
+      </iframe-vue>
       <vue-plyr
         v-else
         ref="sourceplayer"
@@ -162,11 +186,12 @@ import Settings from "@/components/Settings.vue";
 import VuePlyr from "@/components/VuePlyr.vue";
 import HelpVue from "@/components/Help.vue";
 import Funimation from "@/components/platforms/Funimation.vue";
+import IframeVue from "@/components/platforms/Iframe.vue";
 import { TimeStruct } from "./time_utils";
 import { SettingStorage, PiPMode, PiPPosition } from "./Settings";
 
 @Component({
-  components: { Settings, VuePlyr, Funimation, HelpVue }
+  components: { Settings, VuePlyr, Funimation, HelpVue, IframeVue }
 })
 export default class Player extends Vue {
   @Prop({ default: new Video("") }) private reaction!: Video;
