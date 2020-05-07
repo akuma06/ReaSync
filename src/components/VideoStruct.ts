@@ -123,6 +123,7 @@ export interface PlayerInterface {
   play(): void;
   pause(): void;
   seek(t: number): void;
+  setVolume(volume: number): void;
 }
 
 export enum VideoState {

@@ -64,6 +64,7 @@
         "
         :videoId="videoId.reaction"
         :video="reaction"
+        :volume="reactionVolume"
         v-else
       >
       </vue-plyr>
@@ -109,6 +110,7 @@
             handleStateChange('source', state);
           }
         "
+        :volume="sourceVolume"
         :videoId="videoId.source"
         :video="source"
       >
@@ -134,8 +136,11 @@
       @close="handleCloseSettings"
       @pipchange="handlePipChange"
       @pippositionchange="handlePipPositionChange"
+      @reactionvolume="handleReactionVolumeChange"
+      @sourcevolume="handleSourceVolumeChange"
       @pipsizechange="handlePipSizeChange"
       @syncchange="handleSyncChange"
+      @syncplaypause="handleSyncPlayPauseChange"
     />
     <help-vue
       :reaction="reaction"
@@ -178,9 +183,12 @@ export default class Player extends Vue {
   totalWidth = document.body.offsetWidth;
   totalHeight = document.body.offsetHeight;
   settings = new SettingStorage();
+  reactionVolume = this.settings.reactionVolume;
+  sourceVolume = this.settings.sourceVolume;
   pipSize = this.settings.pipVideoSize;
   swapPip = this.settings.swapPiP;
   pipPosition = this.settings.pipPosition;
+  syncPlayPause = this.settings.syncPlayPause;
 
   videoId: {
     reaction: string;
@@ -219,7 +227,10 @@ export default class Player extends Vue {
       ] as unknown) as PlayerInterface;
       if (this.videoState[otherKeyState] === VideoState.BUFFERING) {
         currentPlayer.pause();
-      } else if (this.videoState[otherKeyState] !== VideoState.PLAYING) {
+      } else if (
+        this.videoState[otherKeyState] !== VideoState.PLAYING &&
+        this.syncPlayPause
+      ) {
         if (
           otherKeyState === "reaction" ||
           this.currentDuration >= this.syncTime.toSeconds
@@ -231,7 +242,10 @@ export default class Player extends Vue {
         }
       }
     } else if (state === VideoState.PAUSED || state === VideoState.BUFFERING) {
-      if (this.videoState[otherKeyState] === VideoState.PLAYING) {
+      if (
+        this.videoState[otherKeyState] === VideoState.PLAYING &&
+        this.syncPlayPause
+      ) {
         const otherPlayer = (this.$refs[
           `${otherKeyState}player`
         ] as unknown) as PlayerInterface;
@@ -290,6 +304,18 @@ export default class Player extends Vue {
     this.pipSize = size;
   }
 
+  handleReactionVolumeChange(volume: number) {
+    this.reactionVolume = volume;
+    const player = (this.$refs["reactionplayer"] as unknown) as PlayerInterface;
+    player.setVolume(volume);
+  }
+
+  handleSourceVolumeChange(volume: number) {
+    this.sourceVolume = volume;
+    const player = (this.$refs["sourceplayer"] as unknown) as PlayerInterface;
+    player.setVolume(volume);
+  }
+
   handlePipChange(swap: PiPMode) {
     this.swapPip = swap;
   }
@@ -300,6 +326,10 @@ export default class Player extends Vue {
 
   handleSyncChange(t: TimeStruct) {
     this.syncTime = t;
+  }
+
+  handleSyncPlayPauseChange(syncPlayPause: boolean) {
+    this.syncPlayPause = syncPlayPause;
   }
 
   handleSettings() {

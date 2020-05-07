@@ -60,14 +60,20 @@ export default class VuePlyr extends Vue implements PlayerInterface {
   @Prop({ default: true, required: false }) hideYouTubeDOMError!: boolean;
   @Prop({ default: new Video("") }) private video!: Video;
   @Prop({ default: "" }) private videoId!: string;
+  @Prop({ default: 1 }) private volume!: number;
 
   settings = new SettingStorage();
   player: Plyr | null = null;
-  localeOptions: Plyr.Options = Object.assign(
+  // eslint-disable-next-line prettier/prettier
+  localeOptions: Plyr.Options = Object.assign<Plyr.Options, Plyr.Options, Plyr.Options>(
     {
-      autopause: false
+      autopause: false,
+      storage: {
+        enabled: false
+      }
     },
-    this.options
+    this.options || {},
+    { volume: this.volume }
   );
   localVideoId = this.videoId;
 
@@ -144,6 +150,11 @@ export default class VuePlyr extends Vue implements PlayerInterface {
     if (this.player !== null) {
       this.player.pause();
       this.player.currentTime = t;
+    }
+  }
+  setVolume(volume: number) {
+    if (this.player !== null) {
+      this.player.volume = volume;
     }
   }
   get host(): string {

@@ -20,6 +20,7 @@ interface FunimationPlayer {
   pause: () => void;
   currentTime: (t?: number) => number;
   on: (ev: string, listener: () => void) => void;
+  volume: number;
 }
 
 interface FunimationWindow extends Window {
@@ -61,6 +62,11 @@ export default class Funimation extends Vue implements PlayerInterface {
     if (this.player !== null) {
       this.player.pause();
       this.player.currentTime(t);
+    }
+  }
+  setVolume(volume: number) {
+    if (this.player !== null) {
+      this.player.volume = volume;
     }
   }
 }

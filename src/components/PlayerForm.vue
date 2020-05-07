@@ -49,6 +49,7 @@
                     {{ errors.reaction }}
                   </p>
                 </div>
+                <hr />
                 <div class="field">
                   <label for="islocal" class="checkbox">
                     Is your source video a local file?

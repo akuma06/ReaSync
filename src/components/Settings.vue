@@ -79,6 +79,54 @@
         </div>
         <div class="field is-horizontal">
           <div class="field-label is-normal">
+            <label class="label">Reaction Volume:</label>
+          </div>
+          <div class="field-body">
+            <div class="field has-addons">
+              <div class="control">
+                <input
+                  type="number"
+                  max="100"
+                  min="0"
+                  step="5"
+                  class="input"
+                  @change="handleReactionVolumeChange"
+                  v-model="reactionVolume"
+                  placeholder="Percentage"
+                />
+              </div>
+              <p class="control">
+                <a class="button is-static">%</a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Source Volume:</label>
+          </div>
+          <div class="field-body">
+            <div class="field has-addons">
+              <div class="control">
+                <input
+                  type="number"
+                  max="100"
+                  min="0"
+                  step="5"
+                  class="input"
+                  @change="handleSourceVolumeChange"
+                  v-model="sourceVolume"
+                  placeholder="Percentage"
+                />
+              </div>
+              <p class="control">
+                <a class="button is-static">%</a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
             <label class="label">PiP size:</label>
           </div>
           <div class="field-body">
@@ -92,7 +140,7 @@
                   class="input"
                   @change="handlePipSizeChange"
                   v-model="sourceSize"
-                  placeholder="hh"
+                  placeholder="Percentage"
                 />
               </div>
               <p class="control">
@@ -142,6 +190,18 @@
             </div>
           </div>
         </div>
+        <div class="field">
+          <label for="syncPlayPause" class="checkbox">
+            Do you want to sync play and pause?
+            <input
+              type="checkbox"
+              name="syncPlayPause"
+              id="syncPlayPause"
+              @change="handleSyncPlayPauseChange"
+              v-model="syncPlayPause"
+            />
+          </label>
+        </div>
       </section>
     </div>
   </div>
@@ -167,6 +227,9 @@ export default class Settings extends Vue {
   swapPiP = this.settings.swapPiP.toString();
   sourceSize = this.settings.pipVideoSize * 100;
   pipPosition = this.settings.pipPosition.toString();
+  syncPlayPause = this.settings.syncPlayPause;
+  reactionVolume = this.settings.reactionVolume * 100;
+  sourceVolume = this.settings.sourceVolume * 100;
 
   handlePipChange() {
     this.settings.swapPiP = Number.parseInt(this.swapPiP);
@@ -183,11 +246,28 @@ export default class Settings extends Vue {
     this.$emit("pipsizechange", this.settings.pipVideoSize);
     this.settings.save();
   }
+
+  handleReactionVolumeChange() {
+    this.settings.reactionVolume = this.reactionVolume / 100;
+    this.$emit("reactionvolume", this.settings.reactionVolume);
+    this.settings.save();
+  }
+
+  handleSourceVolumeChange() {
+    this.settings.sourceVolume = this.sourceVolume / 100;
+    this.$emit("sourcevolume", this.settings.sourceVolume);
+    this.settings.save();
+  }
   handleSyncChange() {
     this.localSync.hours = Number.parseInt(this.hours);
     this.localSync.minutes = Number.parseInt(this.minutes);
     this.localSync.seconds = Number.parseInt(this.seconds);
     this.$emit("syncchange", this.localSync);
+  }
+  handleSyncPlayPauseChange() {
+    this.settings.syncPlayPause = this.syncPlayPause;
+    this.$emit("syncplaypause", this.syncPlayPause);
+    this.settings.save();
   }
 
   handleClose() {
