@@ -63,8 +63,10 @@ export default class VuePlyr extends Vue implements PlayerInterface {
 
   settings = new SettingStorage();
   player: Plyr | null = null;
-  _options: Plyr.Options = Object.assign(
-    { autopause: false, debug: true },
+  localeOptions: Plyr.Options = Object.assign(
+    {
+      autopause: false
+    },
     this.options
   );
   localVideoId = this.videoId;
@@ -76,8 +78,7 @@ export default class VuePlyr extends Vue implements PlayerInterface {
       this.$emit("statechange", VideoState.PAUSED);
       const player = this.$refs["plyrplayer"] as HTMLElement;
       if (player !== undefined) {
-        console.log(player);
-        this.player = new Plyr(player, this._options);
+        this.player = new Plyr(player, this.localeOptions);
         if (this.emit !== undefined)
           this.emit.forEach(element => {
             if (this.player !== null)

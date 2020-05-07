@@ -183,14 +183,12 @@ export default class PlayerForm extends Vue {
   handleFileChange(e: Event) {
     const { files } = e.target as HTMLInputElement;
     if (files !== null && files.length > 0) {
-      console.log(files[0]);
       this.localFile = files[0];
     }
   }
   handleReactionFileChange(e: Event) {
     const { files } = e.target as HTMLInputElement;
     if (files !== null && files.length > 0) {
-      console.log(files[0]);
       this.localReactionFile = files[0];
     }
   }

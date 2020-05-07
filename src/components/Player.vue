@@ -185,7 +185,7 @@ export default class Player extends Vue {
   videoId: {
     reaction: string;
     source: string;
-  } = { reaction: "", source: ""};
+  } = { reaction: "", source: "" };
   showSettings = false;
   showHelp = false;
   loading = true;
@@ -220,7 +220,6 @@ export default class Player extends Vue {
       if (this.videoState[otherKeyState] === VideoState.BUFFERING) {
         currentPlayer.pause();
       } else if (this.videoState[otherKeyState] !== VideoState.PLAYING) {
-        currentPlayer.play();
         if (
           otherKeyState === "reaction" ||
           this.currentDuration >= this.syncTime.toSeconds
@@ -231,11 +230,13 @@ export default class Player extends Vue {
           otherPlayer.play();
         }
       }
-    } else if (state === VideoState.PAUSED || VideoState.BUFFERING) {
-      const otherPlayer = (this.$refs[
-        `${otherKeyState}player`
-      ] as unknown) as PlayerInterface;
-      otherPlayer.pause();
+    } else if (state === VideoState.PAUSED || state === VideoState.BUFFERING) {
+      if (this.videoState[otherKeyState] === VideoState.PLAYING) {
+        const otherPlayer = (this.$refs[
+          `${otherKeyState}player`
+        ] as unknown) as PlayerInterface;
+        otherPlayer.pause();
+      }
     } else {
       if (video === "reaction" && state === VideoState.ENDED) {
         const otherPlayer = (this.$refs[
@@ -286,7 +287,6 @@ export default class Player extends Vue {
   }
 
   handlePipSizeChange(size: number) {
-    console.log(size);
     this.pipSize = size;
   }
 

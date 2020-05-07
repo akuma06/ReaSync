@@ -147,7 +147,7 @@ export function generateEmbedLink(
     case VideoPlatform.YOUTUBE:
       return `https://www.youtube.com/embed/${videoId}?origin=${host}&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1&autoplay=0`;
     case VideoPlatform.VIMEO:
-      return `https://player.vimeo.com/video/${videoId}?loop=false&autoplay=false&muted=false&gesture=media&playsinline=true&byline=false&portrait=false&title=false&speed=true&transparent=false`;
+      return `https://player.vimeo.com/video/${videoId}?loop=false&autoplay=false&muted=false&gesture=media&playsinline=true&byline=false&portrait=false&title=false&speed=true&transparent=false&autopause=false`;
     case VideoPlatform.FUNIMATION:
       return videoLink;
   }
