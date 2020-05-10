@@ -153,7 +153,7 @@ export class Video {
       return VideoPlatform.VIMEO;
     } else if (this.source.match(/funimation\.com/i) !== null) {
       return VideoPlatform.FUNIMATION;
-    } else if (this.source.match(/[mp4|ogg|wav|webm]$/i) !== null) {
+    } else if (this.source.match(/(?:mp4|ogg|wav|webm)$/i) !== null) {
       return VideoPlatform.LOCAL;
     }
     return VideoPlatform.IFRAME;
