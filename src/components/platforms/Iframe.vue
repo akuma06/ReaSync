@@ -5,6 +5,7 @@
     height="100%"
     name="player"
     :src="video.link"
+    ref="iframeplayer"
     width="100%"
   ></iframe>
 </template>
@@ -25,7 +26,7 @@ export default class IframeVue extends Vue implements PlayerInterface {
     this.video.getVideoId().then(id => {
       this.videoId = id;
       this.$emit("statechange", VideoState.BUFFERING);
-      const iframe = this.$refs["funplayer"] as HTMLIFrameElement;
+      const iframe = this.$refs["iframeplayer"] as HTMLIFrameElement;
       iframe.addEventListener("load", () => {
         this.$emit("statechange", VideoState.PLAYING);
       });

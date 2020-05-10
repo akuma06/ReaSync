@@ -20,10 +20,12 @@ export default Vue.extend({
 @import "~bulma/sass/elements/button";
 @import "~bulma/sass/elements/container";
 @import "~bulma/sass/elements/icon";
+@import "~bulma/sass/elements/image";
 @import "~bulma/sass/elements/other";
 @import "~bulma/sass/elements/title";
 @import "~bulma/sass/form/_all";
 @import "~bulma/sass/components/card";
+@import "~bulma/sass/components/media";
 @import "~bulma/sass/components/modal";
 @import "~bulma/sass/layout/hero";
 @import "~bulma/sass/layout/section";

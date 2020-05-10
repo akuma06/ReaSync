@@ -1,31 +1,42 @@
 <template>
-  <Player
-    :reaction="reaction"
-    :source="source"
-    :sync="syncTime"
-    @needchange="handleChange"
-    v-if="showPlayer"
-  />
-  <PlayerForm
-    :reaction="reaction"
-    :source="source"
-    :sync="syncTime"
-    v-else
-    @submit="handleFormSubmit"
-  />
+  <div v-if="hasFolder">
+    <vimeo-folder
+      :reaction="reaction"
+      :source="source"
+      @submit="handleFolderSubmit"
+    />
+  </div>
+  <div v-else>
+    <Player
+      :reaction="reaction"
+      :source="source"
+      :sync="syncTime"
+      @needchange="handleChange"
+      v-if="showPlayer"
+    />
+    <PlayerForm
+      :reaction="reaction"
+      :source="source"
+      :sync="syncTime"
+      v-else
+      @submit="handleFormSubmit"
+    />
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import PlayerForm from "@/components/PlayerForm.vue";
 import Player from "@/components/Player.vue";
-import { VideoStruct, Video } from "@/components/VideoStruct";
+import VimeoFolder from "@/components/VimeoFolder.vue";
+import { VideoStruct, Video, isVimeoFolder } from "@/components/VideoStruct";
 import { TimeStruct } from "@/components/time_utils";
 
 @Component({
   components: {
     PlayerForm,
-    Player
+    Player,
+    VimeoFolder
   }
 })
 export default class Home extends Vue {
@@ -89,6 +100,15 @@ export default class Home extends Vue {
   handleChange() {
     this.showPlayer = false;
     this.needToChange = true;
+  }
+
+  handleFolderSubmit(data: { reaction: Video; source: Video }) {
+    this.reaction = data.reaction;
+    this.source = data.source;
+  }
+
+  get hasFolder() {
+    return this.source.isFolder || this.reaction.isFolder;
   }
 }
 </script>
