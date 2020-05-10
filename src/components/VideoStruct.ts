@@ -276,7 +276,7 @@ export async function* parseVimeoFolder(folder: string): AsyncGenerator<Video> {
     for (const response of json.data) {
       const match = response.uri.match(/^\/videos\/([0-9]+)/i);
       if (match !== null && response.embed.html !== null) {
-        const video = new Video("https://vimeo.com" + response.uri);
+        const video = new Video("https://vimeo.com/reasync" + response.uri);
         video.videoId = match[1];
         video.title = response.name;
         video.image = response.pictures.sizes[4].link;
