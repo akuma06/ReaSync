@@ -2,7 +2,7 @@
   <div class="body">
     <section class="hero is-dark is-bold is-fullheight">
       <div class="hero-head">
-        <figure class="image is-128x128">
+        <figure class="image">
           <img src="/img/icons/logo-transparent.png" />
         </figure>
         <h1 class="title has-text-centered is-size-1">ReaSync</h1>
@@ -44,7 +44,7 @@
                       class="input"
                       :class="{ 'is-danger': errors.reaction !== '' }"
                       v-model="localReaction"
-                      placeholder="Reaction Video URL (YouTube, Vimeo, Funimation, Twist, Direct)"
+                      placeholder="Reaction Video URL (YouTube, Vimeo, Funimation, Iframe, Direct)"
                       v-else
                     />
                   </div>
@@ -86,7 +86,7 @@
                       :class="{
                         'is-danger': errors.source !== ''
                       }"
-                      placeholder="Source Video URL (YouTube, Vimeo, Funimation, Twist, Direct)"
+                      placeholder="Source Video URL (YouTube, Vimeo, Funimation, Iframe, Direct)"
                       v-model="localSource"
                       v-else
                     />
@@ -149,6 +149,11 @@
           </div>
         </div>
       </div>
+      <div class="hero-foot">
+        <div class="container">
+          <p class="has-text-centered">Version {{ version }}</p>
+        </div>
+      </div>
     </section>
   </div>
 </template>
@@ -157,6 +162,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { VideoStruct, Video } from "@/components/VideoStruct";
 import { TimeStruct } from "./time_utils";
+import { Version } from "./Settings";
 
 interface ErrorMessages {
   reaction: string;
@@ -183,6 +189,7 @@ export default class PlayerForm extends Vue {
     reaction: "",
     source: ""
   };
+  version = Version;
 
   handleFileChange(e: Event) {
     const { files } = e.target as HTMLInputElement;

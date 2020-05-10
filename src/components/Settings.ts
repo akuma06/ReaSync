@@ -12,6 +12,8 @@ export enum PiPPosition {
   BOTTOMRIGHT
 }
 
+export const Version = "1.0";
+
 export class SettingStorage {
   swapPiP: PiPMode = PiPMode.REACTION;
   pipVideoSize = 0.35;

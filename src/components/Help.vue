@@ -35,6 +35,8 @@
         <p class="generated">
           <a :href="sourceLink" target="_blank">{{ sourceLink }}</a>
         </p>
+        <hr />
+        <p class="help">Version : {{ version }}</p>
       </section>
     </div>
   </div>
@@ -43,6 +45,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { generateEmbedLink, Video } from "./VideoStruct";
+import { Version } from "./Settings";
 
 @Component
 export default class HelpVue extends Vue {
@@ -51,6 +54,7 @@ export default class HelpVue extends Vue {
 
   reactionLink = "";
   sourceLink = "";
+  version = Version;
 
   mounted() {
     Promise.all([this.reaction.getVideoId(), this.source.getVideoId()]).then(
