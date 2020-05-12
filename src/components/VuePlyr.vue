@@ -3,7 +3,7 @@
     <div
       class="plyrplayer plyr__video-embed"
       ref="plyrplayer"
-      v-if="video.type === 1 || video.type === 2"
+      v-if="video.type === 1 || video.type === 2 || video.type === 5"
     >
       <iframe
         v-if="video.type === 1"

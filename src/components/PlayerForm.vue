@@ -44,7 +44,7 @@
                       class="input"
                       :class="{ 'is-danger': errors.reaction !== '' }"
                       v-model="localReaction"
-                      placeholder="Reaction Video URL (YouTube, Vimeo, Funimation, Iframe, Direct)"
+                      placeholder="Reaction Video URL (YouTube, Vimeo, Funimation, Iframe, Direct, DailyMotion)"
                       v-else
                     />
                   </div>
@@ -86,7 +86,7 @@
                       :class="{
                         'is-danger': errors.source !== ''
                       }"
-                      placeholder="Source Video URL (YouTube, Vimeo, Funimation, Iframe, Direct)"
+                      placeholder="Source Video URL (YouTube, Vimeo, Funimation, Iframe, Direct, DailyMotion)"
                       v-model="localSource"
                       v-else
                     />

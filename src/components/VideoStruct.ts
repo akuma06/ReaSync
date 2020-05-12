@@ -9,7 +9,8 @@ export enum VideoPlatform {
   YOUTUBE,
   VIMEO,
   FUNIMATION,
-  IFRAME
+  IFRAME,
+  DAILYMOTION
 }
 
 const vimeoFolderRegex = new RegExp(
@@ -65,6 +66,21 @@ export class Video {
     }
     return "";
   }
+  private dailymotionId(): string {
+    if (this.videoId !== "") return this.videoId;
+    if (this.link !== "") {
+      let videoId = "";
+      const match = this.link.match(
+        /^http[s]:\/\/(?:www\.)*(?:dai\.ly\/|dailymotion\.com\/video\/)(\w+).*/
+      );
+      if (match !== null && match.length > 1) {
+        videoId = match[1];
+      }
+      this.videoId = videoId;
+      return videoId;
+    }
+    return "";
+  }
 
   async vimeoId(): Promise<string> {
     if (this.videoId !== "") return this.videoId;
@@ -104,6 +120,8 @@ export class Video {
     switch (this.type) {
       case VideoPlatform.YOUTUBE:
         return this.youtubeId();
+      case VideoPlatform.DAILYMOTION:
+        return this.dailymotionId();
       case VideoPlatform.VIMEO:
         return await this.vimeoId();
       case VideoPlatform.FUNIMATION:
@@ -146,6 +164,10 @@ export class Video {
       return VideoPlatform.LOCAL;
     } else if (this.source.match(/youtu/i) !== null) {
       return VideoPlatform.YOUTUBE;
+    } else if (
+      /^(https?:\/\/)?(www\.)?(dailymotion\.com|dai\.ly)\/.+$/.test(this.source)
+    ) {
+      return VideoPlatform.DAILYMOTION;
     } else if (
       this.source.match(/vimeo/i) !== null &&
       this.source.match(/review/i) === null
@@ -200,6 +222,8 @@ export function generateEmbedLink(
       return `https://www.youtube.com/embed/${videoId}?origin=${host}&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1&autoplay=0`;
     case VideoPlatform.VIMEO:
       return `https://player.vimeo.com/video/${videoId}?loop=false&autoplay=false&muted=false&gesture=media&playsinline=true&byline=false&portrait=false&title=false&speed=true&transparent=false&autopause=false`;
+    case VideoPlatform.DAILYMOTION:
+      return `http://www.dailymotion.com/embed/video/${videoId}?autoplay=false&muted=false`;
     case VideoPlatform.FUNIMATION:
       return videoLink;
     case VideoPlatform.IFRAME:

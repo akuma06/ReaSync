@@ -5677,9 +5677,9 @@ pkg-up@^2.0.0:
   dependencies:
     find-up "^2.1.0"
 
-plyr@^3.6.2:
+"plyr@https://github.com/akuma06/plyr#dailydist":
   version "3.6.2"
-  resolved "https://registry.yarnpkg.com/plyr/-/plyr-3.6.2.tgz#5a55b608acd161262de1cc75ca843aa64355a051"
+  resolved "https://github.com/akuma06/plyr#91c976767160a979fafd00bd0b6ba1f540d90f14"
   dependencies:
     core-js "^3.6.5"
     custom-event-polyfill "^1.0.7"

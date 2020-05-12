@@ -13,7 +13,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "bulma": "^0.8.2",
     "core-js": "^3.6.4",
-    "plyr": "^3.6.2",
+    "plyr": "https://github.com/akuma06/plyr#dailydist",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
