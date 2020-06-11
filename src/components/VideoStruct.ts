@@ -55,7 +55,7 @@ export class Video {
         videoId = match[1];
       } else {
         const match = this.link.match(
-          /http[s]*:\/\/youtu\.be\/([a-zA-Z0-9-]+)/i
+          /http[s]*:\/\/youtu\.be\/([a-zA-Z0-9-_]+)/i
         );
         if (match !== null && match.length > 1) {
           videoId = match[1];
