@@ -49,7 +49,7 @@ export class Video {
     if (this.link !== "") {
       let videoId = "";
       const match = this.link.match(
-        /http[s]*:\/\/www\.youtube\.com\/watch\?.*v=([a-zA-Z0-9-]+).*/i
+        /http[s]*:\/\/www\.youtube\.com\/watch\?.*v=([a-zA-Z0-9-_]+).*/i
       );
       if (match !== null && match.length > 1) {
         videoId = match[1];
