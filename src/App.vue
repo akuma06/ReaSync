@@ -1,38 +1,32 @@
-<template>
-  <router-view></router-view>
-</template>
-
-<script lang="ts">
-import Vue from "vue";
-
-export default Vue.extend({
-  name: "App",
-
-  data: () => ({
-    //
-  })
-});
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
 </script>
 
+<template>
+  <RouterView class="router" />
+</template>
+
 <style lang="scss">
-@import "~bulma/sass/utilities/_all";
-@import "~bulma/sass/base/_all";
-@import "~bulma/sass/elements/button";
-@import "~bulma/sass/elements/container";
-@import "~bulma/sass/elements/icon";
-@import "~bulma/sass/elements/image";
-@import "~bulma/sass/elements/other";
-@import "~bulma/sass/elements/title";
-@import "~bulma/sass/form/_all";
-@import "~bulma/sass/components/card";
-@import "~bulma/sass/components/media";
-@import "~bulma/sass/components/modal";
-@import "~bulma/sass/layout/hero";
-@import "~bulma/sass/layout/section";
+@import "bulma/sass/utilities/_all.sass";
+@import "bulma/sass/base/_all.sass";
+@import "bulma/sass/helpers/_all.sass";
+@import "bulma/sass/elements/button.sass";
+@import "bulma/sass/elements/container.sass";
+@import "bulma/sass/elements/icon.sass";
+@import "bulma/sass/elements/image.sass";
+@import "bulma/sass/elements/other.sass";
+@import "bulma/sass/elements/title.sass";
+@import "bulma/sass/form/_all.sass";
+@import "bulma/sass/components/card.sass";
+@import "bulma/sass/components/media.sass";
+@import "bulma/sass/components/modal.sass";
+@import "bulma/sass/layout/hero.sass";
+@import "bulma/sass/layout/section.sass";
 html,
-body {
+body, #app, .router {
   height: 100%;
   width: 100%;
   overflow: hidden;
 }
 </style>
+

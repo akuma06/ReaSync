@@ -1,7 +1,7 @@
 module.exports = {
-  transpileDependencies: [],
-  pwa: {
-    themeColor: "#1f191a",
-    display: "fullscreen"
-  }
+    transpileDependencies: [],
+    pwa: {
+        themeColor: "#1f191a",
+        display: "fullscreen"
+    }
 };

@@ -7,13 +7,9 @@
           <span class="icon">
             <font-awesome-icon icon="cog" />
           </span>
-          Settings
+          {{ t('settings') }}
         </p>
-        <button
-          class="delete"
-          aria-label="close"
-          @click.prevent="handleClose"
-        ></button>
+        <button class="delete" aria-label="close" @click.prevent="handleClose"></button>
       </header>
       <section class="modal-card-body">
         <div class="field is-horizontal">
@@ -79,7 +75,7 @@
         </div>
         <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label">Reaction Volume:</label>
+            <label class="label">{{ t("reaction-volume") }}:</label>
           </div>
           <div class="field-body">
             <div class="field has-addons">
@@ -92,7 +88,7 @@
                   class="input"
                   @change="handleReactionVolumeChange"
                   v-model="reactionVolume"
-                  placeholder="Percentage"
+                  :placeholder="t('percentage')"
                 />
               </div>
               <p class="control">
@@ -103,7 +99,7 @@
         </div>
         <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label">Source Volume:</label>
+            <label class="label">{{ t("source-volume") }}:</label>
           </div>
           <div class="field-body">
             <div class="field has-addons">
@@ -116,7 +112,7 @@
                   class="input"
                   @change="handleSourceVolumeChange"
                   v-model="sourceVolume"
-                  placeholder="Percentage"
+                  :placeholder="t('percentage')"
                 />
               </div>
               <p class="control">
@@ -140,7 +136,7 @@
                   class="input"
                   @change="handlePipSizeChange"
                   v-model="sourceSize"
-                  placeholder="Percentage"
+                  :placeholder="t('percentage')"
                 />
               </div>
               <p class="control">
@@ -151,15 +147,15 @@
         </div>
         <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label">Swap PiP:</label>
+            <label class="label">{{ t("swap-pip") }}:</label>
           </div>
           <div class="field-body">
             <div class="field">
               <div class="control">
                 <div class="select is-fullwidth">
                   <select v-model="swapPiP" @change="handlePipChange">
-                    <option value="0">Reaction as main video</option>
-                    <option value="1">Source as main video</option>
+                    <option value="0">{{ t("reaction-main-video") }}</option>
+                    <option value="1">{{ t("source-main-video") }}</option>
                   </select>
                 </div>
               </div>
@@ -168,22 +164,19 @@
         </div>
         <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label">PiP position:</label>
+            <label class="label">{{ t("pip-position") }}:</label>
           </div>
           <div class="field-body">
             <div class="field">
               <div class="control">
                 <div class="select is-fullwidth">
-                  <select
-                    v-model="pipPosition"
-                    @change="handlePipPositionChange"
-                  >
-                    <option value="0">Top Left</option>
-                    <option value="1">Top Center</option>
-                    <option value="2">Top Right</option>
-                    <option value="3">Bottom Left</option>
-                    <option value="4">Bottom Center</option>
-                    <option value="5">Bottom Right</option>
+                  <select v-model="pipPosition" @change="handlePipPositionChange">
+                    <option value="0">{{ t("top-left") }}</option>
+                    <option value="1">{{ t("top-center") }}</option>
+                    <option value="2">{{ t("top-right") }}</option>
+                    <option value="3">{{ t("bottom-left") }}</option>
+                    <option value="4">{{ t("bottom-center") }}</option>
+                    <option value="5">{{ t("bottom-right") }}</option>
                   </select>
                 </div>
               </div>
@@ -192,7 +185,7 @@
         </div>
         <div class="field">
           <label for="syncPlayPause" class="checkbox">
-            Do you want to sync play and pause?
+            {{ t("sync-play-pause") }}
             <input
               type="checkbox"
               name="syncPlayPause"
@@ -207,84 +200,93 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, computed, defineProps, defineEmits } from "vue";
+import { useI18n } from "vue-i18n";
 import { TimeStruct } from "./time_utils";
-import { SettingStorage } from "./Settings";
+import { PiPMode, SettingStorage } from "./Settings";
 import { Video, VideoPlatform } from "./VideoStruct";
 
-@Component
-export default class Settings extends Vue {
-  @Prop({ default: new TimeStruct() }) private sync!: TimeStruct;
-  @Prop({ default: new Video("") }) private reaction!: Video;
-  @Prop({ default: new Video("") }) private source!: Video;
+const { t } = useI18n();
+const props = defineProps<{
+  sync: TimeStruct,
+  reaction: Video,
+  source: Video,
+}>()
 
-  localSync = this.sync;
-  hours = this.sync.hours.toString();
-  minutes = this.sync.minutes.toString();
-  seconds = this.sync.seconds.toString();
-  settings = new SettingStorage();
-  swapPiP = this.settings.swapPiP.toString();
-  sourceSize = this.settings.pipVideoSize * 100;
-  pipPosition = this.settings.pipPosition.toString();
-  syncPlayPause = this.settings.syncPlayPause;
-  reactionVolume = this.settings.reactionVolume * 100;
-  sourceVolume = this.settings.sourceVolume * 100;
+const { sync = new TimeStruct(), reaction = new Video(""), source = new Video("") } = props;
+const localSync = Object.assign({}, sync);
+const hours = ref(sync.hours.toString());
+const minutes = ref(sync.minutes.toString());
+const seconds = ref(sync.seconds.toString());
+const settings = new SettingStorage();
+const swapPiP = ref(settings.swapPiP.toString());
+const sourceSize = ref(settings.pipVideoSize * 100);
+const pipPosition = ref(settings.pipPosition.toString());
+const syncPlayPause = ref(settings.syncPlayPause);
+const reactionVolume = ref(settings.reactionVolume * 100);
+const sourceVolume = ref(settings.sourceVolume * 100);
+const emits = defineEmits<{
+  (event: "pipchange", value: PiPMode): void;
+  (event: "pippositionchange", value: number): void;
+  (event: "pipsizechange", value: number): void;
+  (event: "reactionvolume", value: number): void;
+  (event: "sourcevolume", value: number): void;
+  (event: "syncchange", value: TimeStruct): void;
+  (event: "syncplaypause", value: boolean): void;
+  (event: "close"): void;
+}>()
 
-  handlePipChange() {
-    this.settings.swapPiP = Number.parseInt(this.swapPiP);
-    this.$emit("pipchange", this.settings.swapPiP);
-    this.settings.save();
-  }
-  handlePipPositionChange() {
-    this.settings.pipPosition = Number.parseInt(this.pipPosition);
-    this.$emit("pippositionchange", this.settings.pipPosition);
-    this.settings.save();
-  }
-  handlePipSizeChange() {
-    this.settings.pipVideoSize = this.sourceSize / 100;
-    this.$emit("pipsizechange", this.settings.pipVideoSize);
-    this.settings.save();
-  }
-
-  handleReactionVolumeChange() {
-    this.settings.reactionVolume = this.reactionVolume / 100;
-    this.$emit("reactionvolume", this.settings.reactionVolume);
-    this.settings.save();
-  }
-
-  handleSourceVolumeChange() {
-    this.settings.sourceVolume = this.sourceVolume / 100;
-    this.$emit("sourcevolume", this.settings.sourceVolume);
-    this.settings.save();
-  }
-  handleSyncChange() {
-    this.localSync.hours = Number.parseInt(this.hours);
-    this.localSync.minutes = Number.parseInt(this.minutes);
-    this.localSync.seconds = Number.parseInt(this.seconds);
-    this.$emit("syncchange", this.localSync);
-  }
-  handleSyncPlayPauseChange() {
-    this.settings.syncPlayPause = this.syncPlayPause;
-    this.$emit("syncplaypause", this.syncPlayPause);
-    this.settings.save();
-  }
-
-  handleClose() {
-    this.$emit("close");
-  }
-
-  get shareUrl() {
-    return `${this.settings.host}/?reaction=${
-      this.reaction.type !== VideoPlatform.LOCAL &&
-      this.reaction.type !== undefined
-        ? encodeURIComponent(this.reaction.link)
-        : ""
-    }&source=${
-      this.source.type !== VideoPlatform.LOCAL && this.source.type !== undefined
-        ? encodeURIComponent(this.source.link)
-        : ""
-    }&t=${this.localSync.toString}`;
-  }
+const handleReactionVolumeChange = () => {
+  settings.reactionVolume = reactionVolume.value / 100;
+  emits("reactionvolume", settings.reactionVolume);
+  settings.save();
 }
+const handleSourceVolumeChange = () => {
+  settings.sourceVolume = sourceVolume.value / 100;
+  emits("sourcevolume", settings.sourceVolume);
+  settings.save();
+}
+const handleSyncPlayPauseChange = () => {
+  settings.syncPlayPause = syncPlayPause.value;
+  emits("syncplaypause", settings.syncPlayPause);
+  settings.save();
+}
+const handlePipChange = () => {
+  settings.swapPiP = Number.parseInt(swapPiP.value);
+  emits("pipchange", settings.swapPiP);
+  settings.save();
+}
+const handlePipPositionChange = () => {
+  settings.pipPosition = Number.parseInt(pipPosition.value);
+  emits("pippositionchange", settings.pipPosition);
+  settings.save();
+}
+const handlePipSizeChange = () => {
+  settings.pipVideoSize = sourceSize.value / 100;
+  emits("pipsizechange", settings.pipVideoSize);
+  settings.save();
+}
+const handleSyncChange = () => {
+  localSync.hours = Number.parseInt(hours.value);
+  localSync.minutes = Number.parseInt(minutes.value);
+  localSync.seconds = Number.parseInt(seconds.value);
+  emits("syncchange", localSync);
+}
+
+const handleClose = () => {
+  emits("close");
+}
+
+const shareUrl = computed(() => {
+  return `${settings.host}/?reaction=${
+      reaction.type !== VideoPlatform.LOCAL &&
+      reaction.type !== undefined
+        ? encodeURIComponent(reaction.link)
+        : ""
+    }&source=${source.type !== VideoPlatform.LOCAL && source.type !== undefined
+    ? encodeURIComponent(source.link)
+    : ""
+    }&t=${localSync.toString}`;
+})
 </script>

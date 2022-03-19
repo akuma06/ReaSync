@@ -1,6 +1,8 @@
+export const Version = "1.1";
+
 export enum PiPMode {
   REACTION,
-  SOURCE
+  SOURCE,
 }
 
 export enum PiPPosition {
@@ -9,10 +11,8 @@ export enum PiPPosition {
   TOPRIGHT,
   BOTTOMLEFT,
   BOTTOMCENTER,
-  BOTTOMRIGHT
+  BOTTOMRIGHT,
 }
-
-export const Version = "1.0";
 
 export class SettingStorage {
   swapPiP: PiPMode = PiPMode.REACTION;

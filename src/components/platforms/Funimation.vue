@@ -1,73 +1,68 @@
 <template>
-  <iframe
-    allowfullscreen=""
-    frameborder="0"
-    height="100%"
-    name="player"
-    ref="funplayer"
-    :src="'https://www.funimation.com/player/' + videoId + '/?bdub=0&amp;qid='"
-    width="100%"
-  ></iframe>
+    <iframe
+        allowfullscreen
+        frameborder="0"
+        height="100%"
+        name="player"
+        ref="funplayer"
+        :src="'https://www.funimation.com/player/' + videoId + '/?bdub=0&amp;qid='"
+        width="100%"
+    ></iframe>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
-import { PlayerInterface, VideoState, Video } from "../VideoStruct";
+<script setup lang="ts">
+import { ref, defineProps, onMounted, defineEmits } from "vue";
+import { VideoState, Video } from "../VideoStruct";
 import { SettingStorage } from "../Settings";
-
 interface FunimationPlayer {
-  play: () => void;
-  pause: () => void;
-  currentTime: (t?: number) => number;
-  on: (ev: string, listener: () => void) => void;
-  volume: number;
+    play: () => void;
+    pause: () => void;
+    currentTime: (t?: number) => number;
+    on: (ev: string, listener: () => void) => void;
+    volume: number;
 }
-
 interface FunimationWindow extends Window {
-  fp:
+    fp:
     | {
         player: FunimationPlayer;
-      }
+    }
     | undefined;
 }
 
-@Component
-export default class Funimation extends Vue implements PlayerInterface {
-  @Prop({ default: new Video("") }) private video!: Video;
-  settings = new SettingStorage();
-  videoId = "";
-  player: FunimationPlayer | null = null;
+const props = defineProps<{
+    video: Video
+}>();
+const { video = new Video("") } = props;
 
-  mounted() {
-    this.video.getVideoId().then(id => {
-      this.videoId = id;
-      this.$emit("statechange", VideoState.BUFFERING);
-      const iframe = this.$refs["funplayer"] as HTMLIFrameElement;
-      iframe.addEventListener("load", () => {
-        this.$emit("statechange", VideoState.PAUSED);
-      });
+const emits = defineEmits<{
+    (event: "statechange", value: VideoState): void;
+}>();
+
+const funplayer = ref<HTMLElement | null>(null);
+const settings = new SettingStorage();
+const videoId = ref("");
+const player = ref<FunimationPlayer | null>(null);
+const loadVideo = async () => {
+    videoId.value = await video.getVideoId()
+    emits("statechange", VideoState.BUFFERING);
+    funplayer.value?.addEventListener("load", () => {
+        emits("statechange", VideoState.PAUSED);
     });
-  }
-  play(): void {
-    if (this.player !== null) {
-      this.player.play();
+}
+onMounted(loadVideo);
+const play = (): void => {
+    player.value?.play();
+}
+const pause = (): void => {
+    player.value?.pause();
+}
+const seek = (t: number): void => {
+    player.value?.pause();
+    player.value?.currentTime(t);
+}
+const setVolume = (volume: number) => {
+    if (player.value !== null) {
+        player.value.volume = volume;
     }
-  }
-  pause(): void {
-    if (this.player !== null) {
-      this.player.pause();
-    }
-  }
-  seek(t: number): void {
-    if (this.player !== null) {
-      this.player.pause();
-      this.player.currentTime(t);
-    }
-  }
-  setVolume(volume: number) {
-    if (this.player !== null) {
-      this.player.volume = volume;
-    }
-  }
 }
 </script>

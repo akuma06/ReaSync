@@ -1,48 +1,48 @@
 <template>
-  <iframe
-    allowfullscreen=""
-    frameborder="0"
-    height="100%"
-    name="player"
-    :src="video.link"
-    ref="iframeplayer"
-    width="100%"
-  ></iframe>
+    <iframe
+        allowfullscreen
+        frameborder="0"
+        height="100%"
+        name="player"
+        :src="video.link"
+        ref="iframeplayer"
+        width="100%"
+    ></iframe>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
-import { PlayerInterface, VideoState, Video } from "../VideoStruct";
-import { SettingStorage } from "../Settings";
+<script setup lang="ts">
+import { ref, defineProps, onMounted, defineEmits } from "vue";
+import { VideoState, Video } from "../VideoStruct";
 
+const props = defineProps<{
+    video: Video
+}>();
+const { video = new Video("") } = props;
 
-@Component
-export default class IframeVue extends Vue implements PlayerInterface {
-  @Prop({ default: new Video("") }) private video!: Video;
-  settings = new SettingStorage();
-  videoId = "";
+const emits = defineEmits<{
+    (event: "statechange", value: VideoState): void;
+}>();
 
-  mounted() {
-    this.video.getVideoId().then(id => {
-      this.videoId = id;
-      this.$emit("statechange", VideoState.BUFFERING);
-      const iframe = this.$refs["iframeplayer"] as HTMLIFrameElement;
-      iframe.addEventListener("load", () => {
-        this.$emit("statechange", VideoState.PLAYING);
-      });
+const iframeplayer = ref<HTMLIFrameElement | null>(null);
+const videoId = ref("");
+const loadVideo = async () => {
+    videoId.value = await video.getVideoId()
+    emits("statechange", VideoState.BUFFERING);
+    iframeplayer.value?.addEventListener("load", () => {
+        emits("statechange", VideoState.PLAYING);
     });
-  }
-  play(): void {
+}
+onMounted(loadVideo);
+const play = (): void => {
     console.log("play");
-  }
-  pause(): void {
+}
+const pause = (): void => {
     console.log("pause");
-  }
-  seek(t: number): void {
+}
+const seek = (t: number): void => {
     console.log("seek");
-  }
-  setVolume(volume: number) {
+}
+const setVolume = (volume: number): void => {
     console.log("volume");
-  }
 }
 </script>

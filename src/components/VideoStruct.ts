@@ -1,4 +1,4 @@
-import { TimeStruct } from "./time_utils";
+import type { TimeStruct } from "./time_utils";
 import { SettingStorage } from "./Settings";
 
 const BlaclistedIframes = ["twist.moe", "netflix.com"];
@@ -27,10 +27,10 @@ export function isVimeoFolder(source: string): boolean {
 }
 
 export class Video {
-  private source: File | string;
-  public videoId = "";
-  public title = "";
-  public image = "";
+  source: File | string;
+  videoId = "";
+  title = "";
+  image = "";
 
   constructor(source: File | string) {
     this.source = source;
@@ -44,7 +44,7 @@ export class Video {
     }
   }
 
-  private youtubeId(): string {
+  youtubeId(): string {
     if (this.videoId !== "") return this.videoId;
     if (this.link !== "") {
       let videoId = "";
@@ -66,7 +66,7 @@ export class Video {
     }
     return "";
   }
-  private dailymotionId(): string {
+  dailymotionId(): string {
     if (this.videoId !== "") return this.videoId;
     if (this.link !== "") {
       let videoId = "";
@@ -104,7 +104,7 @@ export class Video {
     return "";
   }
 
-  private funimationId(): string {
+  funimationId(): string {
     if (this.link !== "") {
       const match = this.link.match(
         /http[s]*:\/\/www\.funimation\.com\/player\/([0-9]+).+/i
@@ -120,12 +120,12 @@ export class Video {
     switch (this.type) {
       case VideoPlatform.YOUTUBE:
         return this.youtubeId();
-      case VideoPlatform.DAILYMOTION:
-        return this.dailymotionId();
-      case VideoPlatform.VIMEO:
-        return await this.vimeoId();
-      case VideoPlatform.FUNIMATION:
-        return this.funimationId();
+        case VideoPlatform.DAILYMOTION:
+          return this.dailymotionId();
+        case VideoPlatform.VIMEO:
+          return await this.vimeoId();
+        case VideoPlatform.FUNIMATION:
+          return this.funimationId();
       default:
         return "";
     }

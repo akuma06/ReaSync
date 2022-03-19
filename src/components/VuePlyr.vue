@@ -8,7 +8,7 @@
       <iframe
         v-if="video.type === 1"
         frameborder="0"
-        allowfullscreen="1"
+        allowfullscreen="true"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
         title="YouTube video player"
         width="100%"
@@ -16,6 +16,7 @@
         :src="iframeLink"
       ></iframe>
       <iframe
+        v-else-if="video.type === 2"
         :src="iframeLink"
         allow="autoplay; fullscreen; picture-in-picture"
         referrerpolicy="no-referrer"
@@ -27,152 +28,146 @@
         allowtransparency
       ></iframe>
     </div>
-    <video
-      :src="video.link"
-      v-else
-      class="plyrplayer"
-      playsinline
-      controls
-      ref="plyrplayer"
-    />
+    <video :src="video.link" v-else class="plyrplayer" playsinline controls ref="plyrplayer" />
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, reactive, defineProps, computed, onMounted, onBeforeUnmount } from "vue";
 import Plyr from "plyr";
+import { SettingStorage } from "./Settings";
 import {
-  PlayerInterface,
   VideoState,
   Video,
   generateEmbedLink
 } from "./VideoStruct";
-import { SettingStorage } from "./Settings";
 
-@Component
-export default class VuePlyr extends Vue implements PlayerInterface {
-  /** Options object for plyr config. **/
-  @Prop() options: Plyr.Options | undefined;
-  /** Array of events to emit from the plyr object **/
-  @Prop() emit:
-    | Array<Plyr.StandardEvent | Plyr.Html5Event | Plyr.YoutubeEvent>
-    | undefined;
-  @Prop({ default: true, required: false }) hideYouTubeDOMError!: boolean;
-  @Prop({ default: new Video("") }) private video!: Video;
-  @Prop({ default: "" }) private videoId!: string;
-  @Prop({ default: 1 }) private volume!: number;
+type K = keyof Plyr.PlyrEventMap;
 
-  settings = new SettingStorage();
-  player: Plyr | null = null;
-  // eslint-disable-next-line prettier/prettier
-  localeOptions: Plyr.Options = Object.assign<Plyr.Options, Plyr.Options, Plyr.Options>(
-    {
-      autopause: false,
-      storage: {
-        enabled: false
-      }
+const props = defineProps<{
+  options?: Plyr.Options,
+  emit?: Array<Plyr.StandadEvent | Plyr.Html5Event | Plyr.YoutubeEvent>,
+  hideYouTubeDOMError?: Boolean,
+  video: Video,
+  videoId: string,
+  volume: number,
+}>();
+
+const { options, emit, hideYouTubeDOMError, video = new Video(""), videoId = "", volume = 0 } = props;
+const emits = defineEmits<{
+  (event: "statechange", value: VideoState): void;
+  (event: "durationchange", value: number): void;
+  (event: string, value: Plyr.PlyrEvent): void;
+}>();
+
+const settings = new SettingStorage();
+const player = ref<Plyr | null>(null);
+const plyrplayer = ref<HTMLElement | null>(null);
+const localeOptions: Plyr.Options = Object.assign<Plyr.Options, Plyr.Options, Plyr.Options>(
+  {
+    autopause: false,
+    storage: {
+      enabled: false
     },
-    this.options || {},
-    { volume: this.volume }
-  );
-  localVideoId = this.videoId;
+    ratio: "",
+  },
+  options || {},
+  { volume }
+);
+const localVideoId = ref(videoId);
 
-  mounted() {
-    this.$emit("statechange", VideoState.BUFFERING);
-    this.video.getVideoId().then(id => {
-      if (this.localVideoId !== id) this.localVideoId = id;
-      this.$emit("statechange", VideoState.PAUSED);
-      const player = this.$refs["plyrplayer"] as HTMLElement;
-      if (player !== undefined) {
-        this.player = new Plyr(player, this.localeOptions);
-        if (this.emit !== undefined)
-          this.emit.forEach(element => {
-            if (this.player !== null)
-              this.player.on(element, this.emitPlayerEvent);
-          });
-        this.player.on("waiting", () => {
-          this.$emit("statechange", VideoState.BUFFERING);
-        });
-        this.player.on("pause", () => {
-          this.$emit("statechange", VideoState.PAUSED);
-        });
-        this.player.on("playing", () => {
-          this.$emit("statechange", VideoState.PLAYING);
-        });
-        this.player.on("ended", () => {
-          this.$emit("statechange", VideoState.ENDED);
-        });
-        this.player.on("timeupdate", () => {
-          if (this.player !== null)
-            this.$emit("durationchange", this.player.currentTime);
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.player.on("statechange", (e: any) => {
-          if (
-            e.detail.code !== null &&
-            e.detail.code !== -1 &&
-            e.detail.code !== 5
-          )
-            this.$emit("statechange", e.detail.code);
-        });
-        if (!player.classList.contains("plyrplayer")) {
-          player.classList.add("plyrplayer");
-        }
-      }
+const loadVideo = async () => {
+  emits("statechange", VideoState.BUFFERING);
+  localVideoId.value = await video.getVideoId();
+  emits("statechange", VideoState.PAUSED);
+  if (plyrplayer.value !== null) {
+    player.value = new Plyr(plyrplayer.value, localeOptions);
+    if (emit !== undefined)
+      emit.forEach((element) => {
+        if (player.value !== null)
+          player.value?.on(element, emitPlayerEvent);
+      });
+    player.value.on("waiting", () => {
+      emits("statechange", VideoState.BUFFERING);
     });
+    player.value.on("pause", () => {
+      emits("statechange", VideoState.PAUSED);
+    });
+    player.value.on("playing", () => {
+      emits("statechange", VideoState.PLAYING);
+    });
+    player.value.on("ended", () => {
+      emits("statechange", VideoState.ENDED);
+    });
+    player.value.on("timeupdate", () => {
+      if (player.value !== null)
+        emits("durationchange", player.value.currentTime);
+    });
+    player.value.on("statechange", e => {
+      if (
+        e.detail.code !== null &&
+        e.detail.code !== -1 &&
+        e.detail.code !== 5
+      )
+        emits("statechange", (e.detail.code as unknown) as VideoState);
+    });
+    if (!plyrplayer.value.classList.contains("plyrplayer")) {
+      plyrplayer.value.classList.add("plyrplayer");
+    }
   }
 
-  beforeDestroy() {
-    try {
-      if (this.player !== null) this.player.destroy();
-    } catch (e) {
-      if (
-        !(
-          this.hideYouTubeDOMError &&
-          e.message === "The YouTube player is not attached to the DOM."
-        )
-      ) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
+}
+onMounted(loadVideo);
+onBeforeUnmount(() => {
+  try {
+    if (player.value !== null) player.value.destroy();
+  } catch (e: any) {
+    if (
+      !(
+        hideYouTubeDOMError &&
+        e.message === "The YouTube player is not attached to the DOM."
+      )
+    ) {
+      // eslint-disable-next-line no-console
+      console.error(e);
     }
   }
-  emitPlayerEvent(event: Plyr.PlyrEvent) {
-    this.$emit(event.type, event);
-  }
-  play(): void {
-    if (this.player !== null) this.player.play();
-  }
-  pause(): void {
-    if (this.player !== null) this.player.pause();
-  }
-  seek(t: number): void {
-    if (this.player !== null) {
-      this.player.pause();
-      this.player.currentTime = t;
-    }
-  }
-  setVolume(volume: number) {
-    if (this.player !== null) {
-      this.player.volume = volume;
-    }
-  }
-  get host(): string {
-    return encodeURIComponent(this.settings.host);
-  }
-  get iframeLink(): string {
-    return generateEmbedLink(
-      this.video.type,
-      this.video.link,
-      this.localVideoId
-    );
+})
+const emitPlayerEvent = (event: Plyr.PlyrEvent) => {
+  emits(event.type, event);
+}
+const play = (): void => {
+  player.value?.play();
+}
+const pause = (): void => {
+  player.value?.pause();
+}
+const seek = (t: number): void => {
+  if (player.value !== null) {
+    player.value.pause();
+    player.value.currentTime = t;
   }
 }
+const setVolume = (volume: number) => {
+  if (player.value !== null) {
+    player.value.volume = volume;
+  }
+}
+const host = computed((): string => {
+  return encodeURIComponent(settings.host);
+});
+const iframeLink = computed((): string => {
+  return generateEmbedLink(
+    video.type,
+    video.link,
+    localVideoId.value
+  );
+});
 </script>
 
 <style lang="scss">
-@import "~plyr/dist/plyr";
-.plyrplayer {
+@import "plyr/dist/plyr.css";
+.plyrplayer, .plyr--html5 {
   height: 100%;
   width: 100%;
 }
