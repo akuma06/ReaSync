@@ -1,16 +1,16 @@
 export class TimeStruct {
-  private _hours = 0;
-  private _minutes = 0;
-  private _seconds = 0;
+  private _hours? = 0;
+  private _minutes? = 0;
+  private _seconds? = 0;
 
   get hours() {
-    return this._hours;
+    return this._hours || 0;
   }
   set hours(h: number) {
     this._hours = h > 0 ? h : 0;
   }
   get minutes() {
-    return this._minutes;
+    return this._minutes || 0;
   }
 
   set minutes(m: number) {
@@ -24,7 +24,7 @@ export class TimeStruct {
   }
 
   get seconds() {
-    return this._seconds;
+    return this._seconds || 0;
   }
   set seconds(s: number) {
     if (s > 60) {
