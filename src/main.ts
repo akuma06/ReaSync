@@ -15,7 +15,6 @@ import {
   SUPPORT_LOCALES,
   getBrowserLocale,
 } from "./i18n";
-import "./registerServiceWorker";
 
 library.add(faCog, faQuestionCircle, faSpinner);
 
