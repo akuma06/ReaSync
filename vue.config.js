@@ -2,6 +2,7 @@ module.exports = {
     transpileDependencies: [],
     pwa: {
         themeColor: "#1f191a",
-        display: "fullscreen"
+        display: "fullscreen",
+        name: "ReaSync",
     }
 };
