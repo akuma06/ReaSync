@@ -4,5 +4,6 @@ module.exports = {
         themeColor: "#1f191a",
         display: "fullscreen",
         name: "ReaSync",
+        workboxPluginMode: 'GenerateSW'
     }
 };
