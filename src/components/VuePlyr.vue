@@ -138,7 +138,6 @@ const emitPlayerEvent = (event: Plyr.PlyrEvent) => {
   emits(event.type, event);
 }
 const play = (): void => {
-  console.log("play?");
   player.value?.play();
 }
 const pause = (): void => {

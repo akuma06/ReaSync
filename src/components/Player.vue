@@ -245,8 +245,6 @@ onMounted(generateLinks);
 const handleStateChange = (video: "reaction" | "source", state: VideoState) => {
   const otherKeyState = video === "reaction" ? "source" : "reaction";
   videoState.value[video] = state;
-  console.log(video)
-  console.log(state)
   if (state === VideoState.PLAYING) {
     const currentPlayer = video === "reaction" ? reactionplayer : sourceplayer;
     if (videoState.value[otherKeyState] === VideoState.BUFFERING) {
