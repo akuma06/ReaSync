@@ -245,6 +245,8 @@ onMounted(generateLinks);
 const handleStateChange = (video: "reaction" | "source", state: VideoState) => {
   const otherKeyState = video === "reaction" ? "source" : "reaction";
   videoState.value[video] = state;
+  console.log(video)
+  console.log(state)
   if (state === VideoState.PLAYING) {
     const currentPlayer = video === "reaction" ? reactionplayer : sourceplayer;
     if (videoState.value[otherKeyState] === VideoState.BUFFERING) {
@@ -253,6 +255,13 @@ const handleStateChange = (video: "reaction" | "source", state: VideoState) => {
       videoState.value[otherKeyState] !== VideoState.PLAYING &&
       syncPlayPause.value
     ) {
+      if (
+          otherKeyState === "reaction" ||
+          currentDuration.value >= syncTime.value.toSeconds
+        ) {
+          const otherPlayer = video === "reaction" ? sourceplayer : reactionplayer;
+          otherPlayer.value?.play();
+        }
     } else if (videoState.value[otherKeyState] !== VideoState.PLAYING) {
       currentPlayer.value?.play();
       if (

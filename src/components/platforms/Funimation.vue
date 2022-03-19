@@ -11,8 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, onMounted, defineEmits } from "vue";
-import { VideoState, Video } from "../VideoStruct";
+import { ref, defineProps, onMounted, defineEmits, defineExpose } from "vue";
+import { VideoState, Video, type PlayerInterface } from "../VideoStruct";
 import { SettingStorage } from "../Settings";
 interface FunimationPlayer {
     play: () => void;
@@ -65,4 +65,10 @@ const setVolume = (volume: number) => {
         player.value.volume = volume;
     }
 }
+defineExpose<PlayerInterface>({
+    play,
+    pause,
+    seek,
+    setVolume
+});
 </script>

@@ -33,13 +33,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, defineProps, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, reactive, defineProps, computed, onMounted, onBeforeUnmount, defineExpose } from "vue";
 import Plyr from "plyr";
 import { SettingStorage } from "./Settings";
 import {
   VideoState,
   Video,
-  generateEmbedLink
+  generateEmbedLink,
+type PlayerInterface
 } from "./VideoStruct";
 
 type K = keyof Plyr.PlyrEventMap;
@@ -137,6 +138,7 @@ const emitPlayerEvent = (event: Plyr.PlyrEvent) => {
   emits(event.type, event);
 }
 const play = (): void => {
+  console.log("play?");
   player.value?.play();
 }
 const pause = (): void => {
@@ -162,6 +164,12 @@ const iframeLink = computed((): string => {
     video.link,
     localVideoId.value
   );
+});
+defineExpose<PlayerInterface>({
+    play,
+    pause,
+    seek,
+    setVolume
 });
 </script>
 
