@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",
-    "@types/node": "^16.11.25",
+    "@types/node": "^17.0.21",
     "@vitejs/plugin-vue": "^2.2.2",
     "@vue/cli-plugin-pwa": "~5.0.0",
     "@vue/eslint-config-prettier": "^7.0.0",
